@@ -12,7 +12,8 @@ Servicio GraphQL independiente para optimizar lecturas de TicoAutos usando la mi
 
 1. Copia `.env.example` a `.env`
 2. Ajusta `MONGODB_URI` (o `MONGO_URI`) para apuntar a la misma base que usa el backend REST
-3. Instala dependencias:
+3. Configura `JWT_SECRET` con la misma clave que usa el backend REST para el login
+4. Instala dependencias:
 
 ```bash
 npm install
@@ -25,6 +26,18 @@ npm start
 ```
 
 Por defecto queda en `http://localhost:4000/`.
+
+## Autenticacion JWT
+
+Este servicio valida el mismo JWT emitido por el login REST en cada request GraphQL.
+
+Envia el token en el header:
+
+```http
+Authorization: Bearer <token>
+```
+
+Si falta el token o es invalido/expirado, GraphQL responde `UNAUTHENTICATED`.
 
 ## Schema implementado
 
