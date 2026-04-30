@@ -1,3 +1,4 @@
+//Archivo principal para iniciar el servidor GraphQL y conectar a MongoDB
 require('dotenv').config();
 
 const mongoose = require('mongoose');
@@ -14,6 +15,7 @@ const { authenticateGraphQLRequest } = require('./middlewares/auth');
 const PORT = parseInt(process.env.PORT || '4000', 10);
 const MONGO_URI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/ticoautos';
 
+//Bootstrap para iniciar el servidor GraphQL y conectar a MongoDB, manejando errores de conexión y autenticación de solicitudes GraphQL utilizando JWT.
 async function bootstrap() {
   try {
     await mongoose.connect(MONGO_URI);
