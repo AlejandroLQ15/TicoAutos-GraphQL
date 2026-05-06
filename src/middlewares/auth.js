@@ -24,12 +24,12 @@ function authenticateGraphQLRequest(req) {
     return { id: decoded.id, username: decoded.username || null };
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
-      throw new GraphQLError('Token expired.', {
-        extensions: { code: 'UNAUTHENTICATED' },
+      throw new GraphQLError('Tu sesión expiró. Iniciá sesión de nuevo.', {
+        extensions: { code: 'TOKEN_EXPIRED' },
       });
     }
 
-    throw new GraphQLError('Invalid token.', {
+    throw new GraphQLError('Sesión inválida. Iniciá sesión de nuevo.', {
       extensions: { code: 'UNAUTHENTICATED' },
     });
   }
