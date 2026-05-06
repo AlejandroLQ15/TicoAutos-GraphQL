@@ -1,47 +1,45 @@
-# TicoAutos-GraphQL
+# TicoAutos — GraphQL
 
-Servicio GraphQL independiente para optimizar lecturas de TicoAutos usando la misma base de datos MongoDB del backend REST.
+Este es un **servidor aparte** que lee y escribe en **la misma base MongoDB** que usa el backend REST. Sirve para consultas tipo “traeme autos con filtros” usando GraphQL en lugar de pegarle solo al REST.
+
+No es obligatorio para que la app web funcione: si solo probás la página y el REST, podés ignorar esta carpeta tranquilo.
 
 ## Stack
 
-- Apollo Server
-- GraphQL
-- Mongoose
+- Apollo Server  
+- GraphQL  
+- Mongoose  
 
-## Configuracion
-
-1. Copia `.env.example` a `.env`
-2. Ajusta `MONGODB_URI` (o `MONGO_URI`) para apuntar a la misma base que usa el backend REST
-3. Configura `JWT_SECRET` con la misma clave que usa el backend REST para el login
-4. Instala dependencias:
+## Arranque
 
 ```bash
+cp .env.example .env
 npm install
-```
-
-4. Ejecuta:
-
-```bash
 npm start
 ```
 
-Por defecto queda en `http://localhost:4000/`.
+Suele quedar en **`http://localhost:4000`** (mirá la consola si cambiaste `PORT`).
 
-## Autenticacion JWT
+### Variables que tienen que cuadrar con el REST
 
-Este servicio valida el mismo JWT emitido por el login REST en cada request GraphQL.
+- **`JWT_SECRET`** (o la misma clave que use el backend): GraphQL confía en el mismo token que te dio el login REST.
+- **URI de Mongo**: misma base que el backend (`MONGO_URI` / `MONGODB_URI`, según el ejemplo).
 
-Envia el token en el header:
+Si una cosa no coincide, vas a ver rechazos de sesión o datos que no son los que cargaste por REST.
+
+## Cómo mandar el token
+
+En cada pedido GraphQL:
 
 ```http
-Authorization: Bearer <token>
+Authorization: Bearer <tu JWT del login REST>
 ```
 
-Si falta el token o es invalido/expirado, GraphQL responde `UNAUTHENTICATED`.
+Si falta el token o está mal/expirado, la respuesta va como no autenticado (`UNAUTHENTICATED`).
 
-## Schema implementado
+## Ejemplos de consultas
 
-### Query: Listar todos los vehiculos
+### Listar vehículos
 
 ```graphql
 query {
@@ -61,7 +59,7 @@ query {
 }
 ```
 
-### Query: Ver detalle del vehiculo
+### Detalle por id
 
 ```graphql
 query VehicleById($id: ID!) {
@@ -86,12 +84,10 @@ query VehicleById($id: ID!) {
 }
 ```
 
-### Filtros opcionales en `vehicles`
+### Filtros en `vehicles`
 
-`vehicles` soporta filtros por:
+Opcionales: `marca`, `modelo`, `minPrecio`, `maxPrecio`, `minAnio`, `maxAnio`, `page`, `limit`.
 
-- `marca`
-- `modelo`
-- `minPrecio`, `maxPrecio`
-- `minAnio`, `maxAnio`
-- `page`, `limit`
+## Repo padre
+
+Diagramas y vista general: carpeta `docs/` en la raíz del proyecto completo.
